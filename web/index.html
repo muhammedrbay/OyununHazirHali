@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base href="$FLUTTER_BASE_HREF">
+    <meta charset="UTF-8" />
+    <meta content="IE=Edge" http-equiv="X-UA-Compatible" />
+    <meta name="description" content="BuKim oyunu" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>BuKim</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js"></script>
+
+    <!-- ✅ Google AdSense Script -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9576499265117171"
+     crossorigin="anonymous"></script>
+
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        background: #000;
+      }
+
+      #flutter-container {
+        flex: 1 0 90%;
+        overflow: hidden;
+      }
+
+      #ad-container {
+        flex: 0 0 70px;
+        background-color: #f8f8f8;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2;
+      }
+
+      .adsbygoogle {
+        display: block;
+        width: 100%;
+        height: 100%;
+        max-height: 70px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Flutter Web App -->
+    <div id="flutter-container">
+      <script>
+        window.flutterWebRenderer = "html";
+      </script>
+      <script src="flutter_bootstrap.js" async></script>
+    </div>
+
+    <!-- ✅ Gerçek Reklam Bloğu -->
+    <div id="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-9576499265117171"
+           data-ad-slot="9782843447"
+           data-ad-format="horizontal"
+           data-full-width-responsive="true"></ins>
+      <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+  </body>
+</html>

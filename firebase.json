@@ -1,0 +1,84 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "bukim-1a232",
+          "appId": "1:797189190759:android:16d2982e55aa714d2890c2",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "bukim-1a232",
+          "appId": "1:797189190759:ios:b10526d8838fb8142890c2",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "macos": {
+        "default": {
+          "projectId": "bukim-1a232",
+          "appId": "1:797189190759:ios:3a035bf911120ef72890c2",
+          "uploadDebugSymbols": false,
+          "fileOutput": "macos/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "bukim-1a232",
+          "configurations": {
+            "android": "1:797189190759:android:16d2982e55aa714d2890c2",
+            "ios": "1:797189190759:ios:b10526d8838fb8142890c2",
+            "macos": "1:797189190759:ios:3a035bf911120ef72890c2",
+            "web": "1:797189190759:web:8b04db83be54a28d2890c2",
+            "windows": "1:797189190759:web:f459696f087a13822890c2"
+          }
+        }
+      }
+    }
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ],
+      "predeploy": [
+        "npm --prefix \"$RESOURCE_DIR\" run lint"
+      ]
+    }
+  ],
+  "emulators": {
+    "functions": {
+      "port": 5010
+    },
+    "database": {
+      "port": 9010,
+      "host": "0.0.0.0"
+    },
+    "ui": {
+      "enabled": true,
+      "port": 4005
+    }
+  },
+  "hosting": {
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
