@@ -77,7 +77,7 @@ class SoruIslemleri {
           ? secilenSoru.keys.first
           : secilenSoru.values.first.first;
 
-      int Soru = random.nextInt(KisiSayisi);
+      int Soru = random.nextInt(KisiSayisi) + 1; // 1'den başlayacak şekilde düzeltildi
       String NormalSoru = sayiDegeri(Soru);
       String AjanSorusu = AjanSoru(KisiSayisi, Soru, random);
 

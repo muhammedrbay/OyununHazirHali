@@ -526,10 +526,6 @@ class _OdaKurScreenState extends State<OdaKurScreen> {
         KisiSayisi,
         secilenKategoriler,
       );
-      if (i % 3 != 0) {
-        Soru.updateAll((key, value) => '');
-  }
-
 
       sorular.add(Soru);
     }

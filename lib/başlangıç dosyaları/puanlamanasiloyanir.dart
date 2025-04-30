@@ -66,7 +66,7 @@ class PuanlamaNasilOynanirScreen extends StatelessWidget {
                     "     Örn: “Bu grubun 3. en kibar olanı kim?”\n"
                     "   • Ajana: Belirsiz bir sıralama aralığı sorulur.\n"
                     "     Örn: “Bu grubun 2., 3. veya 4. en kibar olanı kim?” (Buradaki verilen sayılardan biri köylülere giden değerle aynı)\n"
-                    "   • Ajan, bu belirsizlikle doğru tahminde bulunmaya çalışır.",
+                    "   • Ajan, bu belirsizlikle doğru tahminde bulunmaya çalışır.\n",
                     style: _ruleStyle,
                   ),
                   SizedBox(height: 10),

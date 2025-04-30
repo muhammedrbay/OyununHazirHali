@@ -53,13 +53,22 @@ class UserDataFetcher {
           Provider.of<RoomProvider>(context, listen: false);
       String odaIsmi = roomProvider.odaIsmi!;
       int index = roomProvider.kullaniciSirasi!;
+      
+      // Önce referansın var olup olmadığını kontrol et
       DatabaseReference ref =
           FirebaseDatabase.instance.ref("odalar/$odaIsmi/Sonrakisayfa/$index");
+      final snapshot = await ref.get();
 
-      await ref.set(true);
-      print("Index $index başarıyla true yapıldı.");
+      // Eğer referans varsa set işlemini yap
+      if (snapshot.exists) {
+        await ref.set(true);
+        print("✅ Index $index başarıyla true yapıldı.");
+      } else {
+        print("❌ Belirtilen yol bulunamadı: odalar/$odaIsmi/Sonrakisayfa/$index");
+        return;
+      }
     } catch (error) {
-      print("Hata oluştu: $error");
+      print("❌ Hata oluştu: $error");
     }
   }
 }

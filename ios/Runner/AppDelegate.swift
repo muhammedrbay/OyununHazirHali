@@ -1,6 +1,6 @@
 import UIKit
 import Flutter
-import FirebaseCore // 🔸 Firebase kütüphanesi eklendi
+import FirebaseCore  // Firebase'i import et
 
 @main
 @objc class AppDelegate: FlutterAppDelegate {
@@ -8,8 +8,11 @@ import FirebaseCore // 🔸 Firebase kütüphanesi eklendi
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
-    FirebaseApp.configure() // ✅ Firebase başlatılıyor
+    // Firebase başlatılıyor
+    FirebaseApp.configure()
+
     GeneratedPluginRegistrant.register(with: self)
+
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 }

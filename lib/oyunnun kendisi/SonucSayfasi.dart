@@ -46,15 +46,13 @@ class _SonucSayfasiState extends State<SonucSayfasi> {
     if (kIsWeb) {
       registerWebAdView(); // Web platformu için banner reklam HTML'i eklenir
     }
-
-    _realtimeService.deleteRoom(odaIsmi);
   }
 
   void _loadAndShowAd() {
     InterstitialAd.load(
       adUnitId: Platform.isAndroid
-          ? 'ca-app-pub-9576499265117171/5288141220'
-          : 'ca-app-pub-9576499265117171/9780052017',
+          ? 'ca-app-pub-3940256099942544/1033173712' // Android test interstitial
+          : 'ca-app-pub-3940256099942544/1033173712',
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (InterstitialAd ad) {
@@ -193,6 +191,7 @@ class _SonucSayfasiState extends State<SonucSayfasi> {
                       TextButton(
                         child: const Text('Evet'),
                         onPressed: () {
+                          _realtimeService.deleteRoom(odaIsmi);
                           Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(
                                 builder: (context) => const HomeScreen()),

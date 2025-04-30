@@ -4,7 +4,7 @@ import 'package:just_audio/just_audio.dart';
 class MusicPlayerProvider with ChangeNotifier {
   final AudioPlayer _player = AudioPlayer();
   bool _isPlaying = false;
-  double _volume = 0.5;
+  double _volume = 0.0;
 
   bool get isPlaying => _isPlaying;
   double get volume => _volume;

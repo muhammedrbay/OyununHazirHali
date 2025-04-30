@@ -40,12 +40,12 @@ class FirebaseRealtimeService {
     List<String> users = [];
     if (snapshot.exists) {
       users = List<String>.from(snapshot.value as List);
-    }
+    
 
     if (!users.contains(username)) {
       users.add(username);
       await ref.set(users);
-    }
+    }}
   }
 
   // Soru ve ajan listelerini güncelleme

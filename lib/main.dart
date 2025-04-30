@@ -1,8 +1,7 @@
 //burası da giriş sayfası. burada kayıt olma ve giriş yapma gibi şeyler yapılıyor.
 
 import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
@@ -17,19 +16,33 @@ import 'başlangıç dosyaları/anasayfa.dart';
 import 'firebase_options.dart';
 
 void main() async {
+  print('main dosyası başlatıldı');
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Firebase'i başlat
+  if (!kIsWeb && Platform.isIOS) {
+    final status = await AppTrackingTransparency.trackingAuthorizationStatus;
+    if (status == TrackingStatus.notDetermined) {
+      await AppTrackingTransparency.requestTrackingAuthorization();
+    }
+  }
+  // ✅ AdMob Başlatılıyor
+  if (!kIsWeb) {
+    // ✅ AdMob sadece mobilde çalışır
+    await MobileAds.instance.initialize();
+    print('Reklamlar yüklendi');
+    RequestConfiguration configuration = RequestConfiguration(
+      testDeviceIds: ['YOUR_DEVICE_ID'],
+    );
+    MobileAds.instance.updateRequestConfiguration(configuration);
+  }
+  // ✅ Firebase Başlat
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
   final FirebaseDatabase database = FirebaseDatabase.instance;
+  database.databaseURL =
+      'https://bukim-1a232-default-rtdb.europe-west1.firebasedatabase.app';
 
-  // Realtime Database URL'sini ayarla
-  database.databaseURL = 'https://bukim-1a232-default-rtdb.europe-west1.firebasedatabase.app';
-
-  // **Realtime Database İçin Persistence Ayarı**
   if (!kIsWeb) {
     try {
       FirebaseDatabase.instance.setPersistenceEnabled(true);
@@ -38,49 +51,26 @@ void main() async {
       print("❌ Firebase Realtime Database Persistence Error: $e");
     }
   }
-// **Realtime Database Test Function**
-Future<void> testRealtimeDatabase() async {
-  final databaseRef = FirebaseDatabase.instance.ref();
 
-  try {
-    // **Veri yazma testi**
-    await databaseRef.child("test").set({
-      "message": "Realtime Database bağlantısı başarılı!",
-      "timestamp": DateTime.now().toString(),
-    });
-    print("✅ Realtime Database'e veri yazıldı!");
-
-    // **Veri okuma testi**
-    databaseRef.child("test").onValue.listen((event) {
-      if (event.snapshot.exists) {
-        print("✅ Firebase Realtime Database'den veri okundu: ${event.snapshot.value}");
-      } else {
-        print("❌ Veri okunamadı!");
-      }
-    });
-  } catch (e) {
-    print("❌ Realtime Database Hatası: $e");
-  }
-}
-  // **Firebase Emulator Bağlantısı (Opsiyonel)**
+  // Firebase Emulator Bağlantısı (Opsiyonel)
   if (!kIsWeb && kDebugMode) {
     try {
-      FirebaseDatabase.instance.useDatabaseEmulator('localhost', 9000);
       print('✅ Firebase Emulator connected successfully');
     } catch (e) {
       print('❌ Failed to connect to Firebase Emulator: $e');
     }
   }
 
-  // **Firebase Servislerini Test Et**
+  // Firebase servislerini test fonksiyonları
   await testFirebaseServices();
   await testRealtimeDatabase();
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => SoruProvider()),
-        ChangeNotifierProvider(create: (context) => UserProvider()),
-        ChangeNotifierProvider(create: (context) => RoomProvider()),
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => RoomProvider()),
         ChangeNotifierProvider(create: (_) {
           final musicProvider = MusicPlayerProvider();
           musicProvider.init();
@@ -92,8 +82,6 @@ Future<void> testRealtimeDatabase() async {
   );
 }
 
-
-
 Future<void> testFirebaseServices() async {
   try {
     print("🔄 Firebase servisleri test ediliyor...");
@@ -104,17 +92,6 @@ Future<void> testFirebaseServices() async {
       'timestamp': DateTime.now().toString(),
     });
     print("✅ Firebase Realtime Database başarılı!");
-
-    final firestore = FirebaseFirestore.instance;
-    await firestore.collection('testCollection').add({
-      'message': 'Firestore bağlantısı başarılı!',
-      'timestamp': DateTime.now(),
-    });
-
-    var snapshot = await firestore.collection('testCollection').get();
-    for (var doc in snapshot.docs) {
-      print("✅ Firestore'dan okunan veri: ${doc.data()}");
-    }
 
     print("🎉 Tüm Firebase servisleri başarıyla test edildi!");
   } catch (e) {
@@ -168,7 +145,6 @@ class MyApp extends StatelessWidget {
                       height: constraints.maxHeight * 0.9,
                       child: child ?? const SizedBox(),
                     ),
-                    
                   ],
                 );
               },

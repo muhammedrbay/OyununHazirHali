@@ -21,11 +21,13 @@ class OnlineStatusMonitor {
     int index = roomProvider.kullaniciSirasi!;
 
     // Check if room exists by checking 'ajan' field
-    DatabaseReference roomRef = FirebaseDatabase.instance.ref("odalar/$referencePath/buKim");
+    DatabaseReference roomRef =
+        FirebaseDatabase.instance.ref("odalar/$referencePath/buKim");
     DataSnapshot roomSnapshot = await roomRef.get();
-    
+
     if (!roomSnapshot.exists) {
-      print('Room $referencePath does not exist or is invalid, skipping online status monitoring');
+      print(
+          'Room $referencePath does not exist or is invalid, skipping online status monitoring');
       return;
     }
 
@@ -51,11 +53,18 @@ class OnlineStatusMonitor {
 
   Future<void> _updateOnlineStatus(
       String referencePath, int index, bool isConnected) async {
-    bool newStatus = isConnected; // true when online, false when offline
-    DatabaseReference ref = FirebaseDatabase.instance
-        .ref('odalar/$referencePath/onlineStatus/$index');
-    await ref.set(newStatus);
-    print('User online status updated for index $index to $newStatus');
+    DatabaseReference parentRef =
+        FirebaseDatabase.instance.ref('odalar/$referencePath/onlineStatus');
+    final snapshot = await parentRef.get();
+
+    if (snapshot.exists) {
+      DatabaseReference ref = parentRef.child('$index');
+      await ref.set(isConnected);
+      print('User online status updated for index $index to $isConnected');
+    } else {
+      print('Path does not exist: odalar/$referencePath/onlineStatus');
+      // set() işlemi yapılmıyor
+    }
   }
 
   void dispose() {
@@ -68,8 +77,10 @@ class OnlineStatusMonitor {
 
   void kontrolEtVeYonlendir(BuildContext context, String sayfaIsmi) {
     String odaIsmi = Provider.of<RoomProvider>(context, listen: false).odaIsmi!;
-    int turSayisi = Provider.of<RoomProvider>(context, listen: false).turSayisi!;
-    DatabaseReference ref = FirebaseDatabase.instance.ref("odalar/$odaIsmi/Counter");
+    int turSayisi =
+        Provider.of<RoomProvider>(context, listen: false).turSayisi!;
+    DatabaseReference ref =
+        FirebaseDatabase.instance.ref("odalar/$odaIsmi/Counter");
 
     int? lastValue;
 
@@ -115,7 +126,7 @@ class OnlineStatusMonitor {
         Widget hedefSayfa;
         switch (hedefSayfaIsmi) {
           case "sonuc":
-            hedefSayfa = SonucSayfasi();  // Add proper score table
+            hedefSayfa = SonucSayfasi(); // Add proper score table
             break;
           case "kisisecme":
             hedefSayfa = KisiSecmeListesi();
@@ -179,12 +190,22 @@ class GameLifecycleHandler extends WidgetsBindingObserver {
         final referencePath = roomProvider.odaIsmi!;
         final userIndex = roomProvider.kullaniciSirasi!;
 
+        // Önce referansın var olup olmadığını kontrol et
         final statusRef = FirebaseDatabase.instance
             .ref('odalar/$referencePath/onlineStatus/$userIndex');
-        await statusRef.set(true);
+        final snapshots = await statusRef.get();
 
-        final allStatusRef = FirebaseDatabase.instance
-            .ref('odalar/$referencePath/onlineStatus');
+        // Eğer referans varsa set işlemini yap
+        if (snapshots.exists) {
+          await statusRef.set(true);
+          print('✅ Kullanıcı durumu güncellendi: $userIndex -> true');
+        } else {
+          print('❌ Belirtilen yol bulunamadı: odalar/$referencePath/onlineStatus/$userIndex');
+          return;
+        }
+
+        final allStatusRef =
+            FirebaseDatabase.instance.ref('odalar/$referencePath/onlineStatus');
         final snapshot = await allStatusRef.get();
 
         if (snapshot.exists && snapshot.value is List) {

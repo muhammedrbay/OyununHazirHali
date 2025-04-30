@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.muhammed.bukimoyunu</string>
+	<string>com.muhammed.bukimoyunuapple</string>
 	<key>PROJECT_ID</key>
 	<string>bukim-1a232</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,7 +25,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:797189190759:ios:ccca52bc45a3d6792890c2</string>
+	<string>1:797189190759:ios:8c6a171b3f177cf12890c2</string>
 	<key>DATABASE_URL</key>
 	<string>https://bukim-1a232-default-rtdb.europe-west1.firebasedatabase.app</string>
 </dict>

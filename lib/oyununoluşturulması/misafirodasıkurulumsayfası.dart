@@ -100,7 +100,7 @@ void didChangeDependencies() {
 
     try {
       roomList.clear();
-      print("✅ Existing rooms cleared");
+      print("✅ Mevcut odalar temizlendi");
 
       final DatabaseReference dbRef = FirebaseDatabase.instance.ref('odalar');
       final Query query = dbRef.orderByKey();
@@ -109,10 +109,9 @@ void didChangeDependencies() {
       if (snapshot.exists && snapshot.value is Map) {
         Map<String, dynamic> data = Map<String, dynamic>.from(snapshot.value as Map);
         data.forEach((roomKey, roomData) {
-          if (roomData is Map) {
-            // Only add rooms that match the buKim value
-            bool roomBuKim = roomData["buKim"] as bool? ?? false;
-            if (roomBuKim == widget.buKim) {
+          if (roomData is Map && roomData.containsKey("buKim")) {
+            // Eğer buKim değeri widget.buKim ile eşleşiyorsa odayı ekle
+            if (roomData["buKim"] == widget.buKim) {
               roomList.add({
                 "odaIsmi": roomKey,
                 "Tursayisi": (roomData["Tursayisi"] as num?)?.toInt() ?? 0,
