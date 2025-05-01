@@ -1,7 +1,7 @@
 name: flutter_application_1
 description: "A new Flutter project."
 
-publish_to: 'none'
+publish_to: "none"
 
 version: 1.0.0+1
 
@@ -11,23 +11,21 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  provider: ^6.1.2
-  firebase_core: ^3.12.1
-  firebase_database: ^11.3.4
-  firebase_storage: ^12.4.4
-  google_mobile_ads: ^5.3.1
-  just_audio: ^0.9.30
-  app_tracking_transparency: ^2.0.4
-
+  provider: ^6.1.5
+  firebase_core: ^3.13.0
+  firebase_database: ^11.3.5
+  firebase_storage: ^12.4.5
+  google_mobile_ads: ^5.3.0
+  just_audio: ^0.10.2
+  app_tracking_transparency: ^2.0.6+1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
-  flutter_launcher_icons: ^0.13.1
+  flutter_launcher_icons: ^0.14.3
 
 flutter:
-
   uses-material-design: true
 
   assets:
@@ -43,5 +41,3 @@ flutter_launcher_icons:
   ios: true
   image_path: "assets/images/ajanbaslangic.png"
   remove_alpha_ios: true
-
-
