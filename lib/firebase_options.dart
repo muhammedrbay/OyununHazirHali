@@ -46,28 +46,31 @@ class DefaultFirebaseOptions {
     messagingSenderId: '797189190759',
     projectId: 'bukim-1a232',
     authDomain: 'bukim-1a232.firebaseapp.com',
-    databaseURL: 'https://bukim-1a232-default-rtdb.europe-west1.firebasedatabase.app',
+    databaseURL:
+        'https://bukim-1a232-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'bukim-1a232.firebasestorage.app',
     measurementId: 'G-HFERYVSJZK',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAwmqUSiNKAHitMIgz9uEcvANVdJ2vafck',
-    appId: '1:797189190759:android:16d2982e55aa714d2890c2',
+    appId: '1:797189190759:android:e1f3a6a75559c6182890c2',
     messagingSenderId: '797189190759',
     projectId: 'bukim-1a232',
-    databaseURL: 'https://bukim-1a232-default-rtdb.europe-west1.firebasedatabase.app',
+    databaseURL:
+        'https://bukim-1a232-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'bukim-1a232.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAibOjEFviPyyYbnla1U2gixr1nTsQyxkU',
-    appId: '1:797189190759:ios:b10526d8838fb8142890c2',
+    appId: '1:797189190759:ios:8c6a171b3f177cf12890c2',
     messagingSenderId: '797189190759',
     projectId: 'bukim-1a232',
-    databaseURL: 'https://bukim-1a232-default-rtdb.europe-west1.firebasedatabase.app',
+    databaseURL:
+        'https://bukim-1a232-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'bukim-1a232.firebasestorage.app',
-    iosBundleId: 'com.example.flutterApplication2',
+    iosBundleId: 'com.muhammed.bukimoyunuapple',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -75,7 +78,8 @@ class DefaultFirebaseOptions {
     appId: '1:797189190759:ios:3a035bf911120ef72890c2',
     messagingSenderId: '797189190759',
     projectId: 'bukim-1a232',
-    databaseURL: 'https://bukim-1a232-default-rtdb.europe-west1.firebasedatabase.app',
+    databaseURL:
+        'https://bukim-1a232-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'bukim-1a232.firebasestorage.app',
     iosBundleId: 'com.example.flutterApplication1',
   );
@@ -86,9 +90,9 @@ class DefaultFirebaseOptions {
     messagingSenderId: '797189190759',
     projectId: 'bukim-1a232',
     authDomain: 'bukim-1a232.firebaseapp.com',
-    databaseURL: 'https://bukim-1a232-default-rtdb.europe-west1.firebasedatabase.app',
+    databaseURL:
+        'https://bukim-1a232-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'bukim-1a232.firebasestorage.app',
     measurementId: 'G-SS1776J2QY',
   );
-
 }

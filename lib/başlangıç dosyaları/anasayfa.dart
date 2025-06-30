@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'ayarlar.dart';
 import 'bukimbaşlangıç.dart';
 import '../fonksiyon ve providerlar/kullanıcıbilgileriaktarma.dart';
 import 'profil.dart';
@@ -56,11 +55,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       _buildGameButton(
                         context,
-                        'Puanlama Oyna',
+                        'Sıralama Oyna',
                         Colors.blue.shade700,
                         () => Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => puanlamaOyunu()),
+                          MaterialPageRoute(
+                              builder: (context) => puanlamaOyunu()),
                         ),
                       ),
                       _buildGameButton(
@@ -69,7 +69,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         Colors.orange.shade700,
                         () => Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const BukimSayfasi()),
+                          MaterialPageRoute(
+                              builder: (context) => const BukimSayfasi()),
                         ),
                       ),
                     ],
@@ -85,17 +86,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       Icons.person,
                       () => Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const ProfilScreen()),
-                      ),
-                    ),
-                    _buildMenuButton(
-                      context,
-                      'Ayarlar',
-                      Colors.purple.shade700,
-                      Icons.settings,
-                      () => Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const AyarlarScreen()),
+                        MaterialPageRoute(
+                            builder: (context) => const ProfilScreen()),
                       ),
                     ),
                   ],
@@ -108,7 +100,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildGameButton(BuildContext context, String text, Color color, VoidCallback onPressed) {
+  Widget _buildGameButton(
+      BuildContext context, String text, Color color, VoidCallback onPressed) {
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -153,7 +146,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildMenuButton(BuildContext context, String text, Color color, IconData icon, VoidCallback onPressed) {
+  Widget _buildMenuButton(BuildContext context, String text, Color color,
+      IconData icon, VoidCallback onPressed) {
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -203,7 +197,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
-
-
-

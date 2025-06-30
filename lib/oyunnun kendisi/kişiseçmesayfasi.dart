@@ -20,7 +20,7 @@ class KisiSecmeListesi extends StatefulWidget {
 }
 
 class _KisiSecmeListesiState extends State<KisiSecmeListesi> {
- late GameLifecycleHandler _lifecycleHandler;
+  late GameLifecycleHandler _lifecycleHandler;
   late List<String> kullanicilar = [];
   int secilenIndex = -1;
   Future<bool>? kullaniciAjanMi;
@@ -39,9 +39,9 @@ class _KisiSecmeListesiState extends State<KisiSecmeListesi> {
   @override
   void initState() {
     super.initState();
-    
+
     // Initialize lifecycle handler
-_lifecycleHandler = GameLifecycleHandler(context: context);
+    _lifecycleHandler = GameLifecycleHandler(context: context);
     WidgetsBinding.instance.addObserver(_lifecycleHandler);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _onlineStatusMonitor.kontrolEtVeYonlendir(context, 'kisisecme');
@@ -74,8 +74,8 @@ _lifecycleHandler = GameLifecycleHandler(context: context);
         oyunIciTurSayisi = tur;
         oyunIciElSayisi = ciel;
       });
-soru = Provider.of<SoruProvider>(context, listen: false)
-        .InternettenSoru(oyunIciTurSayisi-1, username,oyunIciElSayisi);
+      soru = Provider.of<SoruProvider>(context, listen: false)
+          .InternettenSoru(oyunIciTurSayisi - 1, username, oyunIciElSayisi);
       fetchGameData();
     });
 
@@ -328,7 +328,8 @@ soru = Provider.of<SoruProvider>(context, listen: false)
                                           children: [
                                             CircularProgressIndicator(),
                                             SizedBox(height: 20),
-                                            Text("Diğerleri için bekleniyor..."),
+                                            Text(
+                                                "Diğerleri için bekleniyor..."),
                                           ],
                                         ),
                                       ),
@@ -350,9 +351,11 @@ soru = Provider.of<SoruProvider>(context, listen: false)
                                     fontSize: 18, // Increased from 16
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
-                                    letterSpacing: 0.5, // Added letter spacing for better readability
+                                    letterSpacing:
+                                        0.5, // Added letter spacing for better readability
                                     shadows: [
-                                      Shadow( // Added shadow for better contrast
+                                      Shadow(
+                                        // Added shadow for better contrast
                                         offset: Offset(1, 1),
                                         blurRadius: 2,
                                         color: Colors.black26,

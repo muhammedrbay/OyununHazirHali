@@ -36,7 +36,7 @@ class _KimKimisectiState extends State<KimKimisecti> {
   void initState() {
     super.initState();
 
-_lifecycleHandler = GameLifecycleHandler(context: context);
+    _lifecycleHandler = GameLifecycleHandler(context: context);
     WidgetsBinding.instance.addObserver(_lifecycleHandler);
     _onlineStatusMonitor.startMonitoring(context);
 
@@ -50,13 +50,13 @@ _lifecycleHandler = GameLifecycleHandler(context: context);
     kullaniciSirasi = roomProvider.kullaniciSirasi ?? 1;
     oyunicielSayisi = roomProvider.oyunIciElSayisi!;
     oyuniciturSayisi = roomProvider.oyuniciTurSayisi!;
-    kisiSayisi=roomProvider.kisiSayisi!;
-    KullaniciSirasi=roomProvider.kullaniciSirasi!;
+    kisiSayisi = roomProvider.kisiSayisi!;
+    KullaniciSirasi = roomProvider.kullaniciSirasi!;
 
     username = Provider.of<UserProvider>(context, listen: false).username;
     map = getUsersFromFirestore(odaIsmi);
     soru = Provider.of<SoruProvider>(context, listen: false)
-        .AsilSoru(oyuniciturSayisi-1,oyunicielSayisi)
+        .AsilSoru(oyuniciturSayisi - 1, oyunicielSayisi)
         .then((value) => value != null ? value.toString() : "Soru bulunamadı.");
   }
 
@@ -100,41 +100,43 @@ _lifecycleHandler = GameLifecycleHandler(context: context);
                         padding: const EdgeInsets.only(top: 16, right: 16),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
-                          
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'El: ${oyunicielSayisi}/3',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'El: ${oyunicielSayisi}/3',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Tur: ${oyuniciturSayisi}/${turSayisi}',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Kişi: ${kisiSayisi}',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              Text(
-                                'Tur: ${oyuniciturSayisi}/${turSayisi}',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                'Kişi: ${kisiSayisi}',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],),),
+                      ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 16.0, vertical: 24.0),
@@ -206,23 +208,26 @@ _lifecycleHandler = GameLifecycleHandler(context: context);
                                 final value = userList[index].values.first;
 
                                 Color _randomColor() {
-                                    // Predefined colors with good contrast
-                                    final List<Color> colors = [
-                                      Colors.blue[700]!,
-                                      Colors.red[700]!,
-                                      Colors.green[700]!,
-                                      Colors.purple[700]!,
-                                      Colors.orange[700]!,
-                                      Colors.teal[700]!,
-                                      Colors.indigo[700]!,
-                                      Colors.pink[700]!,
-                                    ];
-                                    return colors[Random().nextInt(colors.length)];
-                                  }
+                                  // Predefined colors with good contrast
+                                  final List<Color> colors = [
+                                    Colors.blue[700]!,
+                                    Colors.red[700]!,
+                                    Colors.green[700]!,
+                                    Colors.purple[700]!,
+                                    Colors.orange[700]!,
+                                    Colors.teal[700]!,
+                                    Colors.indigo[700]!,
+                                    Colors.pink[700]!,
+                                  ];
+                                  return colors[
+                                      Random().nextInt(colors.length)];
+                                }
+
                                 return Card(
                                   color: _randomColor(),
                                   elevation: 4.0,
-                                  margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 8.0, vertical: 4.0),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12.0),
                                   ),
@@ -263,49 +268,51 @@ _lifecycleHandler = GameLifecycleHandler(context: context);
                 ))));
   }
 
-  Future<void> puanHesapla(String username, String key, int KullaniciSirasi) async {
-      try {
-        String? actualAjan = Provider.of<SoruProvider>(context, listen: false)
-            .ajankim(oyuniciturSayisi-1);
-  
-        if (actualAjan != null) {
-          final DatabaseReference databaseRef = FirebaseDatabase.instance.ref();
-          final DatabaseReference puanRef = databaseRef
-              .child('odalar')
-              .child(odaIsmi)
-              .child('puanlama')
-              .child((KullaniciSirasi).toString());
-  
-          DatabaseEvent event = await puanRef.once();
-          DataSnapshot snapshot = event.snapshot;
-  
-          if (snapshot.value == null) {
-            print('❌ Firebase\'den puan değeri alınamadı');
-            return;
-          }
-  
-          int mevcutPuan = snapshot.value as int;
-          int yeniPuan = mevcutPuan;
-  
-          if (actualAjan != username && actualAjan == key) {
-            yeniPuan += 5;
-          } else if (actualAjan != username && actualAjan != key) {
-            yeniPuan -= 5;
-          }
-  
-          await puanRef.set(yeniPuan);
-  
-          print("✅ Puan güncellendi: oda=$odaIsmi, kullanıcı=${KullaniciSirasi-1}, eskiPuan=$mevcutPuan, yeniPuan=$yeniPuan");
+  Future<void> puanHesapla(
+      String username, String key, int KullaniciSirasi) async {
+    try {
+      String? actualAjan = Provider.of<SoruProvider>(context, listen: false)
+          .ajankim(oyuniciturSayisi - 1);
+
+      if (actualAjan != null) {
+        final DatabaseReference databaseRef = FirebaseDatabase.instance.ref();
+        final DatabaseReference puanRef = databaseRef
+            .child('odalar')
+            .child(odaIsmi)
+            .child('puanlama')
+            .child((KullaniciSirasi).toString());
+
+        DatabaseEvent event = await puanRef.once();
+        DataSnapshot snapshot = event.snapshot;
+
+        if (snapshot.value == null) {
+          print('❌ Firebase\'den puan değeri alınamadı');
+          return;
         }
-      } catch (e) {
-        print('❌ Puan güncelleme hatası: $e');
+
+        int mevcutPuan = snapshot.value as int;
+        int yeniPuan = mevcutPuan;
+
+        if (actualAjan != username && actualAjan == key) {
+          yeniPuan += 5;
+        } else if (actualAjan != username && actualAjan != key) {
+          yeniPuan -= 5;
+        }
+
+        await puanRef.set(yeniPuan);
+
+        print(
+            "✅ Puan güncellendi: oda=$odaIsmi, kullanıcı=${KullaniciSirasi - 1}, eskiPuan=$mevcutPuan, yeniPuan=$yeniPuan");
       }
+    } catch (e) {
+      print('❌ Puan güncelleme hatası: $e');
     }
+  }
+
+  bool _hasVoted = false; // Sınıf seviyesinde bir flag ekleyin
 
   void onTapKey(String key, int index) async {
-      
-      
-      UserDataFetcher userDataFetcher = UserDataFetcher();
+    UserDataFetcher userDataFetcher = UserDataFetcher();
 
     final bool? result = await showDialog<bool>(
       context: context,
@@ -326,14 +333,14 @@ _lifecycleHandler = GameLifecycleHandler(context: context);
     );
 
     if (result == true) {
-      await updateVoteInFirebase(odaIsmi, index);
+        await updateVoteInFirebase(odaIsmi, index);
       await userDataFetcher.SonrakiSayfaGecTiklandi(context);
 
       // Modified ajan check
       try {
         final soruProvider = Provider.of<SoruProvider>(context, listen: false);
         final bool isAjan = soruProvider.ajanmi(oyuniciturSayisi, username);
-        
+
         if (!isAjan) {
           print("Puan hesaplanıyor: kullanıcı=$username, seçilen=$key");
           await puanHesapla(username, key, KullaniciSirasi);
@@ -370,21 +377,22 @@ _lifecycleHandler = GameLifecycleHandler(context: context);
 
   Future<List<Map<String, String>>> getUsersFromFirestore(String docId) async {
     try {
-      final DatabaseReference ref = FirebaseDatabase.instance
-          .ref()
-          .child('odalar')
-          .child(docId);
-      
+      final DatabaseReference ref =
+          FirebaseDatabase.instance.ref().child('odalar').child(docId);
+
       // Only fetch the required fields
-      final DataSnapshot kullaniciSnapshot = await ref.child('kullaniciadi').get();
+      final DataSnapshot kullaniciSnapshot =
+          await ref.child('kullaniciadi').get();
       final DataSnapshot secimSnapshot = await ref.child('kimsecildi').get();
 
       if (!kullaniciSnapshot.exists || !secimSnapshot.exists) {
         throw Exception("Required data not found in Firebase");
       }
 
-      List<dynamic> kullaniciAdiList = List.from(kullaniciSnapshot.value as List? ?? []);
-      List<dynamic> kimSecildiList = List.from(secimSnapshot.value as List? ?? []);
+      List<dynamic> kullaniciAdiList =
+          List.from(kullaniciSnapshot.value as List? ?? []);
+      List<dynamic> kimSecildiList =
+          List.from(secimSnapshot.value as List? ?? []);
 
       if (kullaniciAdiList.isEmpty || kimSecildiList.isEmpty) {
         throw Exception("User list or selection list is empty");
@@ -392,7 +400,6 @@ _lifecycleHandler = GameLifecycleHandler(context: context);
 
       return List.generate(kullaniciAdiList.length,
           (i) => {kullaniciAdiList[i]: kimSecildiList[i]});
-          
     } catch (e) {
       print("Error fetching user data: $e");
       rethrow;
@@ -405,31 +412,30 @@ _lifecycleHandler = GameLifecycleHandler(context: context);
         random.nextInt(256), random.nextInt(256), random.nextInt(256), 1);
   }
 
-
-Future<void> updateVoteInFirebase(String odaIsmi, int index) async {
+  Future<void> updateVoteInFirebase(String odaIsmi, int index) async {
     try {
-      final DatabaseReference databaseRef = FirebaseDatabase.instance.ref();
-      final DatabaseReference oyRef = databaseRef
+      final DatabaseReference oyRef = FirebaseDatabase.instance.ref()
           .child('odalar')
           .child(odaIsmi)
           .child('oylar')
           .child(index.toString());
 
-      DatabaseEvent event = await oyRef.once();
-      DataSnapshot snapshot = event.snapshot;
+      // Önbelleği temizle ve en güncel veriyi al
+      DataSnapshot snapshot = await oyRef.get();
 
-      int mevcutOy = 0;
-      if (snapshot.value != null) {
-        mevcutOy = (snapshot.value as int);
+      if (snapshot.value == null) {
+        await oyRef.set(1);
+        print("✅ İlk oy kaydedildi: index=$index, oy=1");
+        return;
       }
 
+      int mevcutOy = snapshot.value as int;
       int yeniOy = mevcutOy + 1;
+      
       await oyRef.set(yeniOy);
-
-      print("✅ Oy başarıyla güncellendi: oda=$odaIsmi, index=$index, yeniOy=$yeniOy");
+      print("✅ Oy başarıyla güncellendi: index=$index, yeniOy=$yeniOy, öncekiOy=$mevcutOy");
     } catch (e) {
-      print('❌ Oy güncelleme hatası: $e');
-      rethrow;
+      print("❌ Oy güncelleme hatası: $e");
     }
   }
 }

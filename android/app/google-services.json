@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "797189190759",
+    "firebase_url": "https://bukim-1a232-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "bukim-1a232",
+    "storage_bucket": "bukim-1a232.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:797189190759:android:e1f3a6a75559c6182890c2",
+        "android_client_info": {
+          "package_name": "com.muhammed.bukimoyunuandroi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwmqUSiNKAHitMIgz9uEcvANVdJ2vafck"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

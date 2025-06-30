@@ -38,11 +38,15 @@ class _OdaKur2State extends State<OdaKur2> {
   late RoomLifecycleHandler _lifecycleHandler;
 
   @override
+  @override
   void initState() {
     super.initState();
-    _fetchInitialData();
-    
-    // Initialize lifecycle handler
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _initializeRoom();
+    });
+
+    // Lifecycle handler yine burada kalsın
     _lifecycleHandler = RoomLifecycleHandler(
       detachedCallBack: () async {
         try {
@@ -54,12 +58,59 @@ class _OdaKur2State extends State<OdaKur2> {
       },
     );
     WidgetsBinding.instance.addObserver(_lifecycleHandler);
-    
-    Username = Provider.of<UserProvider>(context, listen: false).username;
-    BuKim = widget.BuKim;
-    Provider.of<RoomProvider>(context, listen: false).updateRoomInfo(
-      puan: 0,
-    );
+  }
+
+  Stream<bool> counterTakipStream(BuildContext context) {
+    String odaIsmi = Provider.of<RoomProvider>(context, listen: false).odaIsmi!;
+    DatabaseReference ref =
+        FirebaseDatabase.instance.ref("odalar/$odaIsmi/Counter");
+
+    // Stream dönüşü: sadece birler basamağı 1 ise true, değilse false
+    return ref.onValue.map((event) {
+      if (event.snapshot.value == null) return false;
+
+      int currentValue = event.snapshot.value as int;
+      int birlerBasamagi = currentValue % 10;
+
+      print("Yeni Counter: $currentValue → Birler: $birlerBasamagi");
+
+      return birlerBasamagi == 1;
+    });
+  }
+
+  Future<void> _initializeRoom() async {
+    try {
+      // ✅ Oda bilgilerini çek
+      final roomData = await _realtimeService.getRoomData(widget.odaismi);
+      if (roomData != null) {
+        setState(() {
+          odaIsmi = roomData['odaIsmi'] ?? "Name not available";
+          TurSayisi = roomData['Tursayisi'] ?? 0;
+          Sifre = roomData['Sifre'] ?? "";
+          KisiSayisi = roomData['KisiSayisi'] ?? 0;
+        });
+
+        // ✅ Kullanıcı ismini al
+        Username = Provider.of<UserProvider>(context, listen: false).username;
+
+        // ✅ Sesli oda hazırlığını yap
+
+        // ✅ Oda içindeki kullanıcıları dinlemeye başla
+        _realtimeService.getUsersInRoom(widget.odaismi).listen((kullanicilar) {
+          if (!mounted) return;
+          setState(() {
+            _internettenKullancilar = kullanicilar;
+            if (kullanicilar.length == KisiSayisi) {
+              _addAjanToFirestore();
+            }
+          });
+        });
+      } else {
+        print("No such room.");
+      }
+    } catch (error) {
+      print("Hata oluştu: $error");
+    }
   }
 
   @override
@@ -91,8 +142,8 @@ class _OdaKur2State extends State<OdaKur2> {
           setState(() {
             _internettenKullancilar = kullanicilar;
             if (kullanicilar.length == KisiSayisi) {
-      _addAjanToFirestore();
-    }
+              _addAjanToFirestore();
+            }
           });
         });
       } else {
@@ -125,7 +176,6 @@ class _OdaKur2State extends State<OdaKur2> {
   }
 
   // Remove this dispose method as we have another one
- 
 
   // Get user list from Realtime Database
   Future<List<String>> getUsersInRoom(String odaIsmi) async {
@@ -368,8 +418,7 @@ class _OdaKur2State extends State<OdaKur2> {
                         barrierDismissible: false,
                         builder: (BuildContext context) {
                           return StreamBuilder<bool>(
-                            stream:
-                                userDataFetcher.SonrakiSayfaGecilsinmi(context),
+                            stream: counterTakipStream(context),
                             builder: (context, snapshot) {
                               if (snapshot.hasData && snapshot.data == true) {
                                 WidgetsBinding.instance

@@ -1,51 +1,46 @@
-//burası da giriş sayfası. burada kayıt olma ve giriş yapma gibi şeyler yapılıyor.
-
 import 'dart:io';
-
-import 'package:app_tracking_transparency/app_tracking_transparency.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:provider/provider.dart';
-
-import '../fonksiyon ve providerlar/kullanıcıbilgileriaktarma.dart';
-import '../fonksiyon ve providerlar/oyunbilgileriaktarma.dart';
-import 'başlangıç dosyaları/anasayfa.dart';
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'firebase_options.dart';
-import 'fonksiyon ve providerlar/müzik.dart';
 import 'soruveajan/soruveajaninternettenalma.dart';
+import 'fonksiyon ve providerlar/kullanıcıbilgileriaktarma.dart';
+import 'fonksiyon ve providerlar/oyunbilgileriaktarma.dart';
+import 'başlangıç dosyaları/anasayfa.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   print('main dosyası başlatıldı');
   WidgetsFlutterBinding.ensureInitialized();
 
-  if (Platform.isIOS) {
-    WidgetsFlutterBinding.ensureInitialized().addPostFrameCallback((_) async {
+  /// 🚫 Simülatörde çalışmayı engelle (sadece gerçek cihazda izin iste)
+  if (!kIsWeb && Platform.isIOS && !Platform.isMacOS) {
+    final status = await AppTrackingTransparency.trackingAuthorizationStatus;
+    if (status == TrackingStatus.notDetermined) {
+      await Future.delayed(Duration(milliseconds: 300)); // iOS bug fix
       await AppTrackingTransparency.requestTrackingAuthorization();
-    });
+    }
   }
 
-  // ✅ AdMob Başlatılıyor
-  if (Platform.isAndroid || Platform.isIOS) {
-    // ✅ AdMob sadece mobilde çalışır
+  /// ✅ Google Mobile Ads başlat
+  if (!kIsWeb) {
     await MobileAds.instance.initialize();
-    print('Reklamlar yüklendi');
-    RequestConfiguration configuration = RequestConfiguration(
-      testDeviceIds: ['YOUR_DEVICE_ID'],
-    );
-    MobileAds.instance.updateRequestConfiguration(configuration);
+    print('✅ Reklamlar yüklendi');
   }
-  // ✅ Firebase Başlat
+
+  /// ✅ Firebase başlat
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  final FirebaseDatabase database = FirebaseDatabase.instance;
-  database.databaseURL = 'https://bukim-1a232-default-rtdb.europe-west1.firebasedatabase.app';
+  FirebaseDatabase database = FirebaseDatabase.instance;
+  database.databaseURL =
+      'https://bukim-1a232-default-rtdb.europe-west1.firebasedatabase.app';
 
-  if (Platform.isIOS || Platform.isAndroid) {
+  if (!kIsWeb) {
     try {
       FirebaseDatabase.instance.setPersistenceEnabled(true);
       print("✅ Firebase Realtime Database Persistence Enabled!");
@@ -54,16 +49,6 @@ void main() async {
     }
   }
 
-  // Firebase Emulator Bağlantısı (Opsiyonel)
-  if (!kIsWeb && kDebugMode) {
-    try {
-      print('✅ Firebase Emulator connected successfully');
-    } catch (e) {
-      print('❌ Failed to connect to Firebase Emulator: $e');
-    }
-  }
-
-  // Firebase servislerini test fonksiyonları
   await testFirebaseServices();
   await testRealtimeDatabase();
 
@@ -73,11 +58,6 @@ void main() async {
         ChangeNotifierProvider(create: (_) => SoruProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => RoomProvider()),
-        ChangeNotifierProvider(create: (_) {
-          final musicProvider = MusicPlayerProvider();
-          musicProvider.init();
-          return musicProvider;
-        }),
       ],
       child: const MyApp(),
     ),
@@ -113,7 +93,8 @@ Future<void> testRealtimeDatabase() async {
 
     databaseRef.child("test").onValue.listen((event) {
       if (event.snapshot.exists) {
-        print("✅ Firebase Realtime Database'den veri okundu: ${event.snapshot.value}");
+        print(
+            "✅ Firebase Realtime Database'den veri okundu: ${event.snapshot.value}");
       } else {
         print("❌ Veri okunamadı!");
       }
@@ -136,7 +117,6 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       builder: (context, child) {
-        debugPrint('MyApp builder called');
         // Check if the platform is web
         if (kIsWeb) {
           return Scaffold(
@@ -169,7 +149,8 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Giriş Sayfası', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('Giriş Sayfası',
+            style: TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,
         backgroundColor: Colors.blue.shade800,
         elevation: 0,
@@ -257,15 +238,14 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    // Initialize music player
-    Provider.of<MusicPlayerProvider>(context, listen: false).init();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Giriş Yap', style: TextStyle(fontWeight: FontWeight.bold)),
+          title: const Text('Giriş Yap',
+              style: TextStyle(fontWeight: FontWeight.bold)),
           centerTitle: true,
           backgroundColor: Colors.blue.shade800,
           elevation: 0,
@@ -313,11 +293,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15),
-                        borderSide: BorderSide(color: Colors.blue.shade800, width: 2),
+                        borderSide:
+                            BorderSide(color: Colors.blue.shade800, width: 2),
                       ),
                       filled: true,
                       fillColor: Colors.white,
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 15),
                     ),
                   ),
                 ),
@@ -337,17 +319,20 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: ElevatedButton(
                     onPressed: () {
                       if (_usernameController.text.isNotEmpty) {
-                        Provider.of<UserProvider>(context, listen: false).updateUser(_usernameController.text);
+                        Provider.of<UserProvider>(context, listen: false)
+                            .updateUser(_usernameController.text);
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (context) => const HomeScreen()),
+                          MaterialPageRoute(
+                              builder: (context) => const HomeScreen()),
                         );
                       }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
                       foregroundColor: Colors.blue.shade800,
-                      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 40, vertical: 15),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),

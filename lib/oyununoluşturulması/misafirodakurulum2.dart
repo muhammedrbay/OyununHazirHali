@@ -97,6 +97,24 @@ class _OyunkurulumsayfasiState extends State<Oyunkurulumsayfasi> {
     _setupAppLifecycleListener();
   }
 
+  Stream<bool> counterTakipStream(BuildContext context) {
+    String odaIsmi = Provider.of<RoomProvider>(context, listen: false).odaIsmi!;
+    DatabaseReference ref =
+        FirebaseDatabase.instance.ref("odalar/$odaIsmi/Counter");
+
+    // Stream dönüşü: sadece birler basamağı 1 ise true, değilse false
+    return ref.onValue.map((event) {
+      if (event.snapshot.value == null) return false;
+
+      int currentValue = event.snapshot.value as int;
+      int birlerBasamagi = currentValue % 10;
+
+      print("Yeni Counter: $currentValue → Birler: $birlerBasamagi");
+
+      return birlerBasamagi == 1;
+    });
+  }
+
   void _setupAppLifecycleListener() {
     WidgetsBinding.instance.addObserver(
       LifecycleEventHandler(
@@ -323,12 +341,10 @@ class _OyunkurulumsayfasiState extends State<Oyunkurulumsayfasi> {
                     barrierDismissible: false,
                     builder: (BuildContext context) {
                       return StreamBuilder<bool>(
-                        stream: userDataFetcher.SonrakiSayfaGecilsinmi(context),
+                        stream: counterTakipStream(context),
                         builder: (context, snapshot) {
                           if (snapshot.hasData && snapshot.data == true) {
-                            
                             WidgetsBinding.instance.addPostFrameCallback((_) {
-                              
                               Navigator.of(context).pop();
                               if (context.mounted) {
                                 Navigator.push(
@@ -374,8 +390,8 @@ class _OyunkurulumsayfasiState extends State<Oyunkurulumsayfasi> {
             : null,
         label: const Text('İleri'),
         icon: const Icon(Icons.arrow_forward),
-        backgroundColor: _internettenKullancilar.length == kisiSayisi 
-            ? Colors.blue 
+        backgroundColor: _internettenKullancilar.length == kisiSayisi
+            ? Colors.blue
             : Colors.grey[400],
         foregroundColor: Colors.white,
         elevation: _internettenKullancilar.length == kisiSayisi ? 6.0 : 0.0,
@@ -394,7 +410,7 @@ class _OyunkurulumsayfasiState extends State<Oyunkurulumsayfasi> {
           child: Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: isOccupied 
+                colors: isOccupied
                     ? [Colors.blue[400]!, Colors.blue[800]!]
                     : [Colors.grey[300]!, Colors.grey[500]!],
                 begin: Alignment.topLeft,
@@ -413,11 +429,9 @@ class _OyunkurulumsayfasiState extends State<Oyunkurulumsayfasi> {
             padding: const EdgeInsets.all(20),
             child: Row(
               children: [
-                Icon(
-                  Icons.person,
-                  color: isOccupied ? Colors.white : Colors.grey[400],
-                  size: 24
-                ),
+                Icon(Icons.person,
+                    color: isOccupied ? Colors.white : Colors.grey[400],
+                    size: 24),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(

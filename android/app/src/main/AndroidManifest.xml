@@ -1,19 +1,20 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.flutter_application_1">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- ✅ Firebase ve internet bağlantısı için gerekli -->
-    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- 🔐 Gerekli İzinler -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
 
     <application
-        android:label="flutter_application_1"
+        android:name="${applicationName}"
+        android:label="BuKim"
         android:icon="@mipmap/ic_launcher">
 
-        <!-- ✅ AdMob App ID (Google AdMob'dan alınmış olmalı) -->
+        <!-- 🎯 Google AdMob App ID -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-9576499265117171~4146449945" />
 
-        <!-- ✅ Ana Flutter aktivitesi -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -34,13 +35,13 @@
             </intent-filter>
         </activity>
 
-        <!-- ✅ Flutter versiyon ayarı -->
+        <!-- Flutter gömme motor sürümü -->
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
 
-    <!-- ✅ Belirli işlemleri destekleyen uygulamaları sorgulamak için -->
+    <!-- 🔍 Flutter'ın text paylaşımı için önerilen intent -->
     <queries>
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>
@@ -49,4 +50,3 @@
     </queries>
 
 </manifest>
-

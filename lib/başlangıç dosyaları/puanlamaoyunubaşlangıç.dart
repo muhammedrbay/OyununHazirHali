@@ -18,7 +18,7 @@ class puanlamaOyunu extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Puanlama Oyunu',
+          'Sıralama Oyunu',
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
@@ -37,29 +37,32 @@ class puanlamaOyunu extends StatelessWidget {
         ),
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 _buildButton(
                   context,
-                  'Puanlama Odaya Katıl',
+                  'Sıralama Odaya Katıl',
                   button1Color,
                   () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => Misafirodakurulumsayfasi(buKim: buKim),
+                      builder: (context) =>
+                          Misafirodakurulumsayfasi(buKim: buKim),
                     ),
                   ),
                 ),
                 _buildButton(
                   context,
-                  'Puanlama Oda Kur',
+                  'Sıralama Oda Kur',
                   button2Color,
                   () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => OdaKurScreen(buKim: buKim)),
+                    MaterialPageRoute(
+                        builder: (context) => OdaKurScreen(buKim: buKim)),
                   ),
                 ),
                 _buildButton(
@@ -68,7 +71,9 @@ class puanlamaOyunu extends StatelessWidget {
                   button3Color,
                   () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const PuanlamaNasilOynanirScreen()),
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            const PuanlamaNasilOynanirScreen()),
                   ),
                 ),
               ],
@@ -79,7 +84,8 @@ class puanlamaOyunu extends StatelessWidget {
     );
   }
 
-  Widget _buildButton(BuildContext context, String text, Color color, VoidCallback onPressed) {
+  Widget _buildButton(
+      BuildContext context, String text, Color color, VoidCallback onPressed) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: Container(

@@ -52,7 +52,7 @@ class _SonucSayfasiState extends State<SonucSayfasi> {
     InterstitialAd.load(
       adUnitId: Platform.isAndroid
           ? 'ca-app-pub-3940256099942544/1033173712' // Android test interstitial
-          : 'ca-app-pub-3940256099942544/1033173712',
+          : 'ca-app-pub-9576499265117171/9780052017',
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (InterstitialAd ad) {
@@ -192,6 +192,7 @@ class _SonucSayfasiState extends State<SonucSayfasi> {
                         child: const Text('Evet'),
                         onPressed: () {
                           _realtimeService.deleteRoom(odaIsmi);
+
                           Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(
                                 builder: (context) => const HomeScreen()),

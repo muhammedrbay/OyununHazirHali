@@ -382,248 +382,166 @@ void didChangeDependencies() {
           decoration: BoxDecoration(
             color: Colors.black.withOpacity(0.5),
           ),
-          child: FutureBuilder<List<Map<String, dynamic>>>(
-            future: roomsFuture,
-            builder:
-                (context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                  ),
-                );
-              } else if (snapshot.hasError) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.error_outline,
-                          color: Colors.red, size: 60),
-                      const SizedBox(height: 16),
-                      Text(
-                        'Hata: ${snapshot.error}',
-                        style: const TextStyle(color: Colors.white),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                );
-              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.search_off,
-                          color: Colors.white, size: 60),
-                      const SizedBox(height: 16),
-                      const Text(
-                        'Hiç oda bulunamadı',
-                        style: TextStyle(color: Colors.white, fontSize: 18),
-                      ),
-                    ],
-                  ),
-                );
-              } else {
-                return ListView.builder(
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (context, index) {
-                    final room = snapshot.data![index];
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
-                      child: InkWell(
-                        onTap: () {
-                          _showInputDialog(
-                            context,
-                            room['odaIsmi'],
-                            room['şifre'],
-                            room['Tursayisi'],
-                            room['KisiSayisi'],
-                          );
-                        },
-                        child: Card(
-                          elevation: 8,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              gradient: const LinearGradient(
-                                colors: [Color(0xFF2196F3), Color(0xFF1976D2)],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Oda İsmi: ${room['odaIsmi']}',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Row(
-                                    children: [
-                                      const Icon(Icons.sports_esports,
-                                          color: Colors.white70),
-                                      const SizedBox(width: 8),
-                                      Text(
-                                        'Oyun Sayısı: ${room['Tursayisi']}',
-                                        style: const TextStyle(
-                                            color: Colors.white70),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Row(
-                                    children: [
-                                      const Icon(Icons.group,
-                                          color: Colors.white70),
-                                      const SizedBox(width: 8),
-                                      Text(
-                                        'Kişi Sayısı: ${room['KisiSayisi']}',
-                                        style: const TextStyle(
-                                            color: Colors.white70),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                );
-              }
-            },
-          ),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _privateRoomSearch(context);
-        },
-        child: const Icon(Icons.search),
-      ),
-    );
-  }
-
-  void _privateRoomSearch(BuildContext context) async {
-    TextEditingController odaIsmiController = TextEditingController();
-    TextEditingController sifreController = TextEditingController();
-
-    List<Map<String, dynamic>> rooms = await roomsFuture;
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Private Room Girişi'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
+          child: Column(
             children: [
-              TextField(
-                controller: odaIsmiController,
-                decoration: const InputDecoration(
-                  hintText: 'oda ismi',
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: TextField(
+                  style: const TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    hintText: 'Oda ara...',
+                    hintStyle: const TextStyle(color: Colors.white70),
+                    prefixIcon: const Icon(Icons.search, color: Colors.white70),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(color: Colors.white70),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(color: Colors.white),
+                    ),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      roomsFuture = fetchRooms().then((rooms) {
+                        if (value.isEmpty) return rooms;
+                        return rooms.where((room) =>
+                          room['odaIsmi'].toString().toLowerCase().contains(value.toLowerCase())
+                        ).toList();
+                      });
+                    });
+                  },
                 ),
               ),
-              TextField(
-                controller: sifreController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  hintText: 'Şifre',
+              Expanded(
+                child: FutureBuilder<List<Map<String, dynamic>>>(
+                  future: roomsFuture,
+                  builder: (context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                        ),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.error_outline,
+                                color: Colors.red, size: 60),
+                            const SizedBox(height: 16),
+                            Text(
+                              'Hata: ${snapshot.error}',
+                              style: const TextStyle(color: Colors.white),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      );
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.search_off,
+                                color: Colors.white, size: 60),
+                            const SizedBox(height: 16),
+                            const Text(
+                              'Hiç oda bulunamadı',
+                              style: TextStyle(color: Colors.white, fontSize: 18),
+                            ),
+                          ],
+                        ),
+                      );
+                    } else {
+                      return ListView.builder(
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          final room = snapshot.data![index];
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
+                            child: InkWell(
+                              onTap: () {
+                                _showInputDialog(
+                                  context,
+                                  room['odaIsmi'],
+                                  room['şifre'],
+                                  room['Tursayisi'],
+                                  room['KisiSayisi'],
+                                );
+                              },
+                              child: Card(
+                                elevation: 8,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
+                                    gradient: const LinearGradient(
+                                      colors: [Color(0xFF2196F3), Color(0xFF1976D2)],
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Oda İsmi: ${room['odaIsmi']}',
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Row(
+                                          children: [
+                                            const Icon(Icons.sports_esports,
+                                                color: Colors.white70),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              'Oyun Sayısı: ${room['Tursayisi']}',
+                                              style: const TextStyle(
+                                                  color: Colors.white70),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Row(
+                                          children: [
+                                            const Icon(Icons.group,
+                                                color: Colors.white70),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              'Kişi Sayısı: ${room['KisiSayisi']}',
+                                              style: const TextStyle(
+                                                  color: Colors.white70),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    }
+                  }
                 ),
               ),
             ],
           ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('İptal'),
-            ),
-            TextButton(
-              onPressed: () async {
-                try {
-                  String odaIsmi = odaIsmiController.text;
-                  String password = sifreController.text;
-
-                  final room = rooms.firstWhere(
-                    (room) =>
-                        room['odaIsmi'] == odaIsmi && room['şifre'] == password,
-                    orElse: () => {},
-                  );
-
-                  if (room.isNotEmpty) {
-                    // Check room capacity
-                    final DatabaseReference ref = FirebaseDatabase.instance
-                        .ref('odalar/${room["odaIsmi"]}/kullaniciadi');
-                    final DatabaseEvent event = await ref.once();
-
-                    if (event.snapshot.exists) {
-                      List<dynamic> currentUsers =
-                          event.snapshot.value as List<dynamic>;
-                      if (currentUsers.contains(_username)) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text(
-                                    'Aynı isme sahip başka kullanıcı var!')));
-                        return;
-                      }
-                      if (currentUsers.length >= room['KisiSayisi']) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Oda dolmuştur!')));
-                        return;
-                      }
-                    }
-
-                    _username =
-                        Provider.of<UserProvider>(context, listen: false)
-                            .username;
-                    Provider.of<RoomProvider>(context, listen: false)
-                        .updateRoomInfo(
-                      odaIsmi: room['odaIsmi'],
-                      sifre: room['şifre'],
-                      buKim: widget.buKim,
-                      turSayisi: room['Tursayisi'],
-                      kisiSayisi: room['KisiSayisi'],
-                    );
-                    await addNewUserToRoom(odaIsmi, _username);
-                    Navigator.pop(context); // Close the dialog first
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Oyunkurulumsayfasi(
-                          BuKim: widget.buKim,
-                        ),
-                      ),
-                    );
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text('Yanlış kullanıcı adı veya şifre!')));
-                  }
-                } catch (e) {
-                  print("Error in private room search: $e");
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Bir hata oluştu: $e')));
-                }
-              },
-              child: const Text('Giriş'),
-            ),
-          ],
-        );
-      },
-    );
+        ),
+      ),
+      );
   }
 }

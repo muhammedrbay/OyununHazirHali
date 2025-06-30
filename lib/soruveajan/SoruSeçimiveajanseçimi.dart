@@ -62,8 +62,8 @@ class SoruIslemleri {
         String key = soru.keys.first;
         String value = soru.values.first.first;
         return {
-          '${key.startsWith("en") ? "bu grubun" : template} $key kişisi kim':
-              '${key.startsWith("en") ? "bu grubun" : template} $value kişisi kim',
+          '${key.startsWith("en") ? "bu grubun" : template} $key kim':
+              '${key.startsWith("en") ? "bu grubun" : template} $value kim',
         };
       }).toList();
 
@@ -77,7 +77,8 @@ class SoruIslemleri {
           ? secilenSoru.keys.first
           : secilenSoru.values.first.first;
 
-      int Soru = random.nextInt(KisiSayisi) + 1; // 1'den başlayacak şekilde düzeltildi
+      int Soru =
+          random.nextInt(KisiSayisi) + 1; // 1'den başlayacak şekilde düzeltildi
       String NormalSoru = sayiDegeri(Soru);
       String AjanSorusu = AjanSoru(KisiSayisi, Soru, random);
 

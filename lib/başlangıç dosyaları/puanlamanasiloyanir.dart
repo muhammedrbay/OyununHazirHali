@@ -26,7 +26,7 @@ class PuanlamaNasilOynanirScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: const [
                   Text(
-                    "Puanlama — Kişilik Tahmin Oyunu",
+                    "Sıralama — Kişilik Tahmin Oyunu",
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -99,7 +99,7 @@ class PuanlamaNasilOynanirScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 10),
                   Text(
-                    "Puanlama:",
+                    "Sıralama:",
                     style: _sectionTitleStyle,
                   ),
                   Text(
